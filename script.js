@@ -4,7 +4,25 @@
    products or the cart. Cart state lives in localStorage under "norrland_cart"
    as an array of { id, qty }.
    ========================================================================== */
+document.addEventListener("DOMContentLoaded", function () {
 
+  // Push Page Details to Adobe Data Layer
+  pushPageData();
+
+  updateCartCount();
+
+  const toggle = document.querySelector(".nav__toggle");
+  if (toggle) toggle.addEventListener("click", toggleNav);
+
+  renderFeatured();
+
+  if (document.getElementById("product-grid")) {
+    renderCategoryFilters();
+    renderProductGrid("All");
+  }
+
+  renderCartPage();
+});
 const CART_KEY = "norrland_cart";
 adobeDataLayer.push({
     event: "addToCart",
