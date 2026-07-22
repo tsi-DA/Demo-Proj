@@ -6,6 +6,17 @@
    ========================================================================== */
 
 const CART_KEY = "norrland_cart";
+adobeDataLayer.push({
+    event: "addToCart",
+    commerce: {
+        productID: product.id,
+        productName: product.name,
+        productCategory: product.category,
+        price: product.price,
+        quantity: qty,
+        cta: "Add to Cart"
+    }
+});
 
 /* ---------- Cart storage helpers ---------- */
 
