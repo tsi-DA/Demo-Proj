@@ -4,37 +4,24 @@
    products or the cart. Cart state lives in localStorage under "norrland_cart"
    as an array of { id, qty }.
    ========================================================================== */
-document.addEventListener("DOMContentLoaded", function () {
 
-  // Push Page Details to Adobe Data Layer
-  pushPageData();
+// Ensure the Adobe data layer exists before anything tries to push to it
+window.adobeDataLayer = window.adobeDataLayer || [];
 
-  updateCartCount();
-
-  const toggle = document.querySelector(".nav__toggle");
-  if (toggle) toggle.addEventListener("click", toggleNav);
-
-  renderFeatured();
-
-  if (document.getElementById("product-grid")) {
-    renderCategoryFilters();
-    renderProductGrid("All");
-  }
-
-  renderCartPage();
-});
 const CART_KEY = "norrland_cart";
-adobeDataLayer.push({
-    event: "addToCart",
-    commerce: {
-        productID: product.id,
-        productName: product.name,
-        productCategory: product.category,
-        price: product.price,
-        quantity: qty,
-        cta: "Add to Cart"
+
+/* ---------- Adobe Data Layer helpers ---------- */
+
+function pushPageData() {
+  adobeDataLayer.push({
+    event: "pageView",
+    page: {
+      pageName: document.title,
+      url: window.location.href
+      // add pageType / category here once that data is available on each page
     }
-});
+  });
+}
 
 /* ---------- Cart storage helpers ---------- */
 
@@ -69,6 +56,19 @@ function addToCart(id, qty) {
   }
   saveCart(cart);
   showToast(product.name + " added to cart");
+
+  // Push to Adobe data layer now that product and qty are real values
+  adobeDataLayer.push({
+    event: "addToCart",
+    commerce: {
+      productID: product.id,
+      productName: product.name,
+      productCategory: product.category,
+      price: product.price,
+      quantity: qty,
+      cta: "Add to Cart"
+    }
+  });
 }
 
 function removeFromCart(id) {
@@ -250,6 +250,9 @@ function toggleNav() {
 /* ---------- Init ---------- */
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Push Page Details to Adobe Data Layer
+  pushPageData();
+
   updateCartCount();
 
   const toggle = document.querySelector(".nav__toggle");
